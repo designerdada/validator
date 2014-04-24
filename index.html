@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Validator.js</title>
+  </head>
+  <style>
+  form {
+    margin: 50px auto;
+    padding: 25px;
+    border: 1px solid #e5e5e5;
+  }
+  input[type=text],
+  input[type=text],
+  input[type=text],
+  input[type=text],
+  input[type=text],
+  input[type=text] {
+
+  }
+  button[type=submit] {
+    background: #333;
+    border: 1px solid #111;
+    color: #fff;
+  }
+  </style>
+  <body>
+
+    <form name="form-1">
+      <h4>Invalid</h4>
+      <label>
+        <span>Credit card</span>
+        <input type="text" required="required" pattern="masterCard" value="530467123456789">
+      </label>
+      <label>
+        <span>Numbers only</span>
+        <input type="text" required="required" pattern="^[0-9]+$" value="ABC">
+      </label>
+      <label>
+        <span>"data-validate" ignored from validator</span>
+        <input type="number" required="required" placeholder="I won't be validated: data-novalidate" data-novalidate>
+      </label>
+      <label>
+        <span>Radio buttons: required</span>
+        <input type="radio" name="radioRequired" required="required">
+        <input type="radio" name="radioRequired">
+      </label>
+      <label>
+        <span>Checkboxes: required</span>
+        <input type="checkbox" name="checkboxRequired" required="required">
+        <input type="checkbox" name="checkboxRequired">
+      </label>
+      <label>
+        <span>Select menus</span>
+        <select required="required">
+          <option value="" selected="selected">Null</option>
+          <option value="choice1">Choice 1</option>
+          <option value="choice2">Choice 2</option>
+        </select>
+      </label>
+      <label>
+        <span>Textarea: required</span>
+        <textarea required="required"></textarea>
+      </label>
+      <label>
+        <span>Textarea: pattern</span>
+        <textarea pattern="[A-Za-z]{1}"></textarea>
+      </label>
+      <button type="submit">Submit</button>
+    </form>
+
+    <form name="form-2">
+      <h4>Valid</h4>
+      <input type="text" required="required" pattern="masterCard" value="5304671234567891" data-pattern-error="">
+      <input type="text" required="required" pattern="^[0-9]+$">
+      <input type="number" required="required">
+      <div>
+        <input type="radio" name="test1" required="required">
+        <input type="radio" name="test1">
+      </div>
+      <div>
+        <input type="checkbox" name="test2" required="required">
+        <input type="checkbox" name="test2">
+      </div>
+      <select required="required">
+        <option value="">Null</option>
+        <option value="choice1" selected="selected">Choice 1</option>
+        <option value="choice2">Choice 2</option>
+      </select>
+      <button type="submit">Submit</button>
+    </form>
+
+    <script src="dist/validator.js"></script>
+    <script>
+    validator.config({
+      patterns: {
+        visaCredit: "^4[0-9]{12}(?:[0-9]{3})?$",
+        masterCard: "^5[1-5][0-9]{14}$"
+      },
+      template: function (message) {
+        return '<li>' + message + '</li>';
+      },
+      onError: function (elem, scope) {
+
+      },
+      afterError: function (elem, scope) {
+
+      }
+    });
+
+    validator.run('form-1')
+    .valid(function () {
+      console.log('Valid handler 1...');
+    })
+    .invalid(function () {
+      console.log('Invalid handler 1...');
+    });
+
+    validator.run('form-2')
+    .valid(function () {
+      console.log('Valid handler 2...');
+    })
+    .invalid(function () {
+      console.log('Invalid handler 2...');
+    });
+
+    validator.run('form-3')
+    .valid(function () {
+      console.log('Valid handler 3...');
+    })
+    .invalid(function () {
+      console.log('Invalid handler 3...');
+    });
+    </script>
+  </body>
+</html>
