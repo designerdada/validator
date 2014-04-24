@@ -2,7 +2,7 @@
   "name": "validator",
   "version": "0.0.0",
   "description": "Pure js form validator",
-  "main": "validator.js",
+  "main": "dist/validator.js",
   "directories": {
     "test": "test"
   },
