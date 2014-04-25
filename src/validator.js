@@ -35,6 +35,8 @@
     addNoValidate(this.elem);
     addEvent(this.elem, 'submit', bind(this.validate, this));
   };
+  
+  Validator.prototype.constructor = Validator;
 
   Validator.prototype.valid = function (callback) {
     this.callbacks.valid = callback;
