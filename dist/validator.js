@@ -21,18 +21,26 @@
     console.log(elem);
   };
 
-  var Validator = function (elem) {
+  var Validator = function (elem, options) {
     this.elem = elem;
+    this.options = options || {};
+    this.trigger = this.options.trigger || null;
+    this.on = this.options.on || null;
+    console.log(this.on);
     this.fields = [
       'input',
       'textarea',
       'select'
     ];
     this.callbacks = {
-      valid: function () {},
-      invalid: function () {}
+      valid: function () { return this; },
+      invalid: function () { return this; }
     };
-    this.validate();
+    if (!this.elem) return this.callbacks;
+    addNoValidate(this.elem);
+    for (var i = 0; i < this.trigger.length; i++) {
+      addEvent(this.elem.querySelector(this.trigger[i]), this.on, bind(this.validate, this));
+    }
   };
 
   Validator.prototype.constructor = Validator;
@@ -47,7 +55,7 @@
     return this;
   };
 
-  Validator.prototype.validate = function () {
+  Validator.prototype.validate = function (event) {
     var valid = true;
     var fields = getFields(this.elem, this.fields);
     for (var i = 0; i < fields.length; i++) {
@@ -61,6 +69,11 @@
     } else {
       this.callbacks.invalid();
     }
+    if (event.preventDefault) {
+      event.preventDefault();
+    } else {
+      event.returnValue = false;
+    }
   };
 
   var compile = function (string) {
@@ -73,9 +86,27 @@
     return str.replace(/^\s+|\s+$/g, '');
   };
 
+  var bind = function (fn, obj) {
+    return function () {
+      return fn.apply(obj, arguments);
+    };
+  };
+
   var addNoValidate = function (elem) {
     if (!elem.hasAttribute('novalidate')) {
       elem.setAttribute('novalidate', '');
+    }
+  };
+
+  var addEvent = function (elem, ev, callback) {
+    if (elem.attachEvent) {
+      elem['e' + ev + callback] = callback;
+      elem[ev + callback] = function () {
+        elem['e' + ev + callback](root.event);
+      };
+      elem.attachEvent('on' + ev, elem[ev + callback]);
+    } else {
+      elem.addEventListener(ev, callback, false);
     }
   };
 
@@ -195,8 +226,9 @@
     }
   };
 
-  exports.run = function (scope) {
-    return new Validator(scope);
+  exports.run = function (scope, options) {
+    var form = document.querySelector('form[name="' + scope + '"]');
+    return new Validator(form, options);
   };
 
   exports.patterns = {

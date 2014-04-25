@@ -64,7 +64,7 @@
         <span>Textarea: pattern</span>
         <textarea pattern="[A-Za-z]{1}"></textarea>
       </label>
-      <button type="submit" data-validate-submit="form-1">Submit</button>
+      <button type="submit" class="form-submit-1">Submit</button>
     </form>
 
     <script src="dist/validator.js"></script>
@@ -85,21 +85,32 @@
       }
     });
 
-    var formOne = document.querySelector('form[name=form-1]');
-    var formOneSubmit = document.querySelector('[data-validate-submit=form-1]');
-    formOneSubmit.addEventListener('click', function (event) {
-
-      validator.run(formOne)
-      .valid(function () {
-        console.log('Valid handler 1...');
-      })
-      .invalid(function () {
-        console.log('Invalid handler 1...');
-      });
-
-      event.preventDefault();
-
+    validator.run('form-1', {
+      trigger: ['.form-submit-1'],
+      on: 'click'
+    })
+    .valid(function () {
+      console.log('Valid handler 1...');
+    })
+    .invalid(function () {
+      console.log('Invalid handler 1...');
     });
+
+    // var formOne = document.querySelector('form[name=form-1]');
+    // var formOneSubmit = document.querySelector('[data-validate-submit=form-1]');
+    // formOneSubmit.addEventListener('click', function (event) {
+
+    //   validator.run(formOne)
+    //   .valid(function () {
+    //     console.log('Valid handler 1...');
+    //   })
+    //   .invalid(function () {
+    //     console.log('Invalid handler 1...');
+    //   });
+
+    //   event.preventDefault();
+
+    // });
     </script>
   </body>
 </html>
