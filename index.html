@@ -10,12 +10,11 @@
     border: 1px solid #e5e5e5;
   }
   input[type=text],
-  input[type=text],
-  input[type=text],
-  input[type=text],
-  input[type=text],
-  input[type=text] {
-
+  input[type=email],
+  input[type=url],
+  input[type=tel],
+  input[type=number] {
+    border: 1px solid #ccc;
   }
   button[type=submit] {
     background: #333;
@@ -25,7 +24,7 @@
   </style>
   <body>
 
-    <form name="form-1">
+    <form name="form-1" novalidate>
       <h4>Invalid</h4>
       <label>
         <span>Credit card</span>
@@ -65,28 +64,7 @@
         <span>Textarea: pattern</span>
         <textarea pattern="[A-Za-z]{1}"></textarea>
       </label>
-      <button type="submit">Submit</button>
-    </form>
-
-    <form name="form-2">
-      <h4>Valid</h4>
-      <input type="text" required="required" pattern="masterCard" value="5304671234567891" data-pattern-error="">
-      <input type="text" required="required" pattern="^[0-9]+$">
-      <input type="number" required="required">
-      <div>
-        <input type="radio" name="test1" required="required">
-        <input type="radio" name="test1">
-      </div>
-      <div>
-        <input type="checkbox" name="test2" required="required">
-        <input type="checkbox" name="test2">
-      </div>
-      <select required="required">
-        <option value="">Null</option>
-        <option value="choice1" selected="selected">Choice 1</option>
-        <option value="choice2">Choice 2</option>
-      </select>
-      <button type="submit">Submit</button>
+      <button type="submit" data-validate-submit="form-1">Submit</button>
     </form>
 
     <script src="dist/validator.js"></script>
@@ -107,28 +85,20 @@
       }
     });
 
-    validator.run('form-1')
-    .valid(function () {
-      console.log('Valid handler 1...');
-    })
-    .invalid(function () {
-      console.log('Invalid handler 1...');
-    });
+    var formOne = document.querySelector('form[name=form-1]');
+    var formOneSubmit = document.querySelector('[data-validate-submit=form-1]');
+    formOneSubmit.addEventListener('click', function (event) {
 
-    validator.run('form-2')
-    .valid(function () {
-      console.log('Valid handler 2...');
-    })
-    .invalid(function () {
-      console.log('Invalid handler 2...');
-    });
+      validator.run(formOne)
+      .valid(function () {
+        console.log('Valid handler 1...');
+      })
+      .invalid(function () {
+        console.log('Invalid handler 1...');
+      });
 
-    validator.run('form-3')
-    .valid(function () {
-      console.log('Valid handler 3...');
-    })
-    .invalid(function () {
-      console.log('Invalid handler 3...');
+      event.preventDefault();
+
     });
     </script>
   </body>

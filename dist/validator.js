@@ -29,13 +29,13 @@
       'select'
     ];
     this.callbacks = {
-      valid: function () { return this; },
-      invalid: function () { return this; }
+      valid: function () {},
+      invalid: function () {}
     };
-    if (!this.elem) return this.callbacks;
-    addNoValidate(this.elem);
-    addEvent(this.elem, 'submit', bind(this.validate, this));
+    this.validate();
   };
+
+  Validator.prototype.constructor = Validator;
 
   Validator.prototype.valid = function (callback) {
     this.callbacks.valid = callback;
@@ -47,7 +47,7 @@
     return this;
   };
 
-  Validator.prototype.validate = function (event) {
+  Validator.prototype.validate = function () {
     var valid = true;
     var fields = getFields(this.elem, this.fields);
     for (var i = 0; i < fields.length; i++) {
@@ -61,11 +61,6 @@
     } else {
       this.callbacks.invalid();
     }
-    if (event.preventDefault) {
-      event.preventDefault();
-    } else {
-      event.returnValue = false;
-    }
   };
 
   var compile = function (string) {
@@ -78,27 +73,9 @@
     return str.replace(/^\s+|\s+$/g, '');
   };
 
-  var bind = function (fn, obj) {
-    return function () {
-      return fn.apply(obj, arguments);
-    };
-  };
-
   var addNoValidate = function (elem) {
     if (!elem.hasAttribute('novalidate')) {
       elem.setAttribute('novalidate', '');
-    }
-  };
-
-  var addEvent = function (elem, ev, callback) {
-    if (elem.attachEvent) {
-      elem['e' + ev + callback] = callback;
-      elem[ev + callback] = function () {
-        elem['e' + ev + callback](root.event);
-      };
-      elem.attachEvent('on' + ev, elem[ev + callback]);
-    } else {
-      elem.addEventListener(ev, callback, false);
     }
   };
 
@@ -219,8 +196,7 @@
   };
 
   exports.run = function (scope) {
-    var form = document.querySelector('form[name="' + scope + '"]');
-    return new Validator(form);
+    return new Validator(scope);
   };
 
   exports.patterns = {
