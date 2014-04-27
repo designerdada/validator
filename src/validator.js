@@ -250,7 +250,7 @@
     return new Validator(form, options);
   };
 
-  patterns = {
+  var patterns = {
     email: '^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$',
     url: '[-a-zA-Z0-9@:%._+~#=]{2,256}.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)',
     number: '^[-+]?[0-9]*.?[0-9]+$',
