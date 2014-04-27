@@ -12,12 +12,33 @@
 
   var exports = {};
 
-  exports.onError = function (elem, scope) {
-    console.log(elem);
+  var requiredMessage = 'This field is required';
+
+  var displayError = function (elem, type, message) {
+    console.log('Type of error:', type);
+    while (elem.parentNode) {
+      if (elem.hasAttribute('data-error')) {
+        elem.style.border = '1px solid red';
+        break;
+      }
+      elem = elem.parentNode;
+    }
   };
 
-  exports.afterError = function (elem, scope) {
-    console.log(elem);
+  var removeError = function () {
+
+  };
+
+  exports.template = function (message) {
+    return '<li>' + message + '</li>';
+  };
+
+  exports.onError = function (elem, type, scope) {
+    displayError(elem, type);
+  };
+
+  exports.afterError = function (elem, type, scope) {
+    // console.log(elem);
   };
 
   var Validator = function (elem, options) {
@@ -25,7 +46,6 @@
     this.options = options || {};
     this.trigger = this.options.trigger || null;
     this.on = this.options.on || null;
-    console.log(this.on);
     this.fields = [
       'input',
       'textarea',
@@ -164,9 +184,9 @@
       for (var prop in attr) {
         var result = tool[prop](elem, node, attr[prop], scope);
         if (result) {
-          exports.afterError(elem, scope);
+          exports.afterError(elem, prop, scope);
         } else {
-          exports.onError(elem, scope);
+          exports.onError(elem, prop, scope);
           valid = false;
         }
       }
