@@ -227,7 +227,7 @@
       default:
         test = function () {
           var value = trim(elem.value);
-          if (new RegExp(exports.patterns.empty).test(value)) {
+          if (new RegExp(patterns.empty).test(value)) {
             return false;
           }
           return true;
@@ -237,7 +237,7 @@
       return test();
     },
     pattern: function (elem, node, pattern) {
-      var match = exports.patterns[pattern];
+      var match = patterns[pattern];
       if (match) {
         pattern = match;
       }
@@ -250,7 +250,7 @@
     return new Validator(form, options);
   };
 
-  exports.patterns = {
+  patterns = {
     email: '^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$',
     url: '[-a-zA-Z0-9@:%._+~#=]{2,256}.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)',
     number: '^[-+]?[0-9]*.?[0-9]+$',
@@ -262,7 +262,7 @@
     var patterns = options.patterns;
     if (patterns) {
       for (var prop in patterns) {
-        exports.patterns[prop] = patterns[prop];
+        patterns[prop] = patterns[prop];
       }
     }
   };
