@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Validator.js</title>
+  </head>
+  <style>
+  * {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font: 300 14px/1.4 'Helvetica Neue', Helvetica, Arial;
+  }
+  form {
+    margin: 50px auto;
+    max-width: 450px;
+    padding: 25px;
+    border: 1px solid #e5e5e5;
+  }
+  .form__row {
+    margin: 0 0 10px;
+  }
+  .form__label {
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    display: block;
+    padding: 5px;
+  }
+  .form__label span {
+    display: block;
+  }
+  input[type=text],
+  input[type=email],
+  input[type=url],
+  input[type=tel],
+  input[type=number],
+  textarea {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  }
+  input[type=text]:focus,
+  input[type=email]:focus,
+  input[type=url]:focus,
+  input[type=tel]:focus,
+  input[type=number]:focus,
+  textarea:focus {
+    border-color:#66afe9;
+    outline:0;
+    -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+    box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+  }
+  button[type=submit] {
+    color: #333;
+    background: #fff;
+    border: 1px solid #ccc;
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+  }
+  </style>
+  <body>
+
+    <form name="form-1">
+      <h4>Valid</h4>
+      <div class="form__row">
+        <label class="form__label">
+          <span>Credit card</span>
+          <input type="text" required="required" pattern="masterCard" value="5212345678901234AAA" data-error>
+        </label>
+      </div>
+      <div class="form__row">
+        <label class="form__label">
+          <span>Numbers only</span>
+          <input type="text" required="required" pattern="^[0-9]+$" value="123AAA" data-error>
+        </label>
+      </div>
+      <div class="form__row">
+        <label class="form__label">
+          <span>"data-validate" ignored from validator</span>
+          <input type="number" required="required" placeholder="I won't be validated: data-novalidate" data-novalidate>
+        </label>
+      </div>
+      <div class="form__row">
+        <div class="form__label" data-error>
+          <span>Radio buttons: required</span>
+          <label>
+            Radio A
+            <input type="radio" name="radioRequired" required="required">
+          </label>
+          <label>
+            Radio B
+            <input type="radio" name="radioRequired">
+          </label>
+        </div>
+      </div>
+      <div class="form__row">
+        <div class="form__label" data-error>
+          <span>Checkboxes: required</span>
+          <label>
+            Checkbox A
+            <input type="checkbox" name="checkboxRequired" required="required">
+          </label>
+          <label>
+            Checkbox B
+            <input type="checkbox" name="checkboxRequired">
+          </label>
+        </div>
+      </div>
+      <div class="form__row">
+        <label class="form__label" data-error>
+          <span>Select menus</span>
+          <select required="required">
+            <option value="" selected="selected">Null</option>
+            <option value="choice1">Choice 1</option>
+            <option value="choice2">Choice 2</option>
+          </select>
+        </label>
+      </div>
+      <div class="form__row">
+        <label class="form__label">
+          <span>Textarea: required</span>
+          <textarea required="required" data-error></textarea>
+        </label>
+      </div>
+      <div class="form__row">
+        <label class="form__label">
+          <span>Textarea: pattern</span>
+          <textarea pattern="[A-Za-z]{1}" data-error></textarea>
+        </label>
+      </div>
+      <div class="form__row">
+        <button type="submit" class="form-submit-1">
+          Submit
+        </button>
+      </div>
+    </form>
+
+    <script src="dist/validator.js"></script>
+    <script>
+    validator.config({
+      patterns: {
+        visaCredit: "^4[0-9]{12}(?:[0-9]{3})?$",
+        masterCard: "^5[1-5][0-9]{14}$"
+      },
+      template: function (message) {
+        return '<li>' + message + '</li>';
+      },
+      onError: function (elem, scope) {
+
+      },
+      afterError: function (elem, scope) {
+
+      }
+    });
+
+    console.log(validator.patterns);
+
+    validator.run('form-1', {
+      trigger: ['.form-submit-1'],
+      on: 'click'
+    })
+    .valid(function () {
+      console.log('Valid handler 1...');
+    })
+    .invalid(function () {
+      console.log('Invalid handler 1...');
+    });
+
+    // var formOne = document.querySelector('form[name=form-1]');
+    // var formOneSubmit = document.querySelector('[data-validate-submit=form-1]');
+    // formOneSubmit.addEventListener('click', function (event) {
+
+    //   validator.run(formOne)
+    //   .valid(function () {
+    //     console.log('Valid handler 1...');
+    //   })
+    //   .invalid(function () {
+    //     console.log('Invalid handler 1...');
+    //   });
+
+    //   event.preventDefault();
+
+    // });
+    </script>
+  </body>
+</html>
